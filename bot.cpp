@@ -133,7 +133,6 @@ static void BotSpawnInit_TimersAndPhysics( bot_t &pBot )
    pBot.b_in_water = 0;
    pBot.b_ducking = 0;
    pBot.b_has_enough_ammo_for_good_weapon = 0;
-   pBot.b_only_has_weak_weapons = 0;
    pBot.b_low_health = 0;
 
    pBot.f_frame_accumulator = bot_think_spf;
@@ -2838,9 +2837,7 @@ static void BotThinkHandleEnemy_FindAndAim(bot_t &pBot)
    edict_t *pEdict = pBot.pEdict;
 
    if(BotWeaponCanAttack(pBot, FALSE) &&
-      ((pBot.b_has_enough_ammo_for_good_weapon && !pBot.b_low_health
-        && !pBot.b_only_has_weak_weapons)
-       || pBot.f_last_time_attacked > gpGlobals->time - BotCombatDisengageTime(pBot)))
+      ((pBot.b_has_enough_ammo_for_good_weapon && !pBot.b_low_health) || pBot.f_last_time_attacked > gpGlobals->time - 3.0f))
    {
       // get enemy
       BotFindEnemy( pBot );
@@ -2908,7 +2905,6 @@ static qboolean BotThinkHandleEnemy(bot_t &pBot)
 
    // Only need to check ammo, since ammo check for weapons includes weapons ;)
    pBot.b_has_enough_ammo_for_good_weapon = !BotAllWeaponsRunningOutOfAmmo(pBot, TRUE);
-   pBot.b_only_has_weak_weapons = BotHasOnlyWeakWeapons(pBot);
 
    BotThinkHandleEnemy_FindAndAim(pBot);
 
@@ -2919,7 +2915,7 @@ static qboolean BotThinkHandleEnemy(bot_t &pBot)
    // does have an enemy?
    if (pBot.pBotEnemy != NULL)
    {
-      if(BotWeaponCanAttack(pBot, FALSE) && (!pBot.b_low_health || pBot.f_last_time_attacked > gpGlobals->time - BotCombatDisengageTime(pBot)))
+      if(BotWeaponCanAttack(pBot, FALSE) && (!pBot.b_low_health || pBot.f_last_time_attacked > gpGlobals->time - 3.0f))
       {
          BotShootAtEnemy( pBot );  // shoot at the enemy
          DidShootAtEnemy = (pBot.pBotEnemy != NULL);

@@ -402,8 +402,7 @@ qboolean BotUpdateTrackSoundGoal( bot_t &pBot )
    // check if target has been erased
    // check our state -> do we want to keep tracking
    if((pBot.f_track_sound_time > 0.0f && pBot.f_track_sound_time < gpGlobals->time) ||
-        !pBot.b_has_enough_ammo_for_good_weapon || pBot.b_low_health
-        || pBot.b_only_has_weak_weapons)
+        !pBot.b_has_enough_ammo_for_good_weapon || pBot.b_low_health)
    {
       if(pBot.waypoint_goal != -1)
       {
@@ -575,8 +574,7 @@ static void BotFindWaypointGoalSearchWeaponAmmo(bot_t &pBot, int &index, float &
    }
 
    // find new weapon if only have shitty weapons or running out of ammo on all weapons
-   if (BotGetGoodWeaponCount(pBot, 1)==0 || !pBot.b_has_enough_ammo_for_good_weapon
-       || pBot.b_only_has_weak_weapons)
+   if (BotGetGoodWeaponCount(pBot, 1)==0 || !pBot.b_has_enough_ammo_for_good_weapon)
    {
       // find weapons that bot can use
       int select_index = -1;
@@ -687,8 +685,7 @@ static void BotFindWaypointGoal( bot_t &pBot )
       // only if not engaging
 
       // find these if have good weapon and no low health
-      if(!pBot.b_low_health && pBot.b_has_enough_ammo_for_good_weapon
-         && !pBot.b_only_has_weak_weapons)
+      if(!pBot.b_low_health && pBot.b_has_enough_ammo_for_good_weapon)
       {
          // find nearest interesting sound that isn't visible
          if (BotFindWaypointGoalTrackSound(pBot, pTrackSoundEdict, index, mindistance, goal_type))
